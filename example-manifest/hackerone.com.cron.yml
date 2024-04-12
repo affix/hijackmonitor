@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: hackerone
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: hackerone
+            image: affixxx/hijackmonitor:latest
+            env:
+            - name: HOST
+              value: "hackerone.com"  # Replace this with your hostname
+            - name: DISCORD_WEBHOOK_URL
+              valueFrom:              # Replace this with the value of your webhook url, remember webhook URLs are sensitive
+                secretKeyRef:
+                  name: discord-webhook
+                  key: password
+            imagePullPolicy: Always
+          restartPolicy: Never
